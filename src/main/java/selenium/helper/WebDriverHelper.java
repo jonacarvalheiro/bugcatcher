@@ -1,10 +1,8 @@
 package selenium.helper;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import selenium.configuration.SeleniumConfigurator;
 
 import java.time.Duration;
@@ -16,12 +14,10 @@ import java.util.function.Function;
 public class WebDriverHelper {
 
     private final WebDriver driver;
-    private final SeleniumConfigurator configurator;
     private final int timeout;
     private final int polling;
 
     public WebDriverHelper(WebDriver driver, SeleniumConfigurator configurator) {
-        this.configurator = configurator;
         timeout = (int) configurator.getTimeout();
         polling = (int) configurator.getPolling();
         this.driver = driver;
@@ -91,7 +87,6 @@ public class WebDriverHelper {
     }
 
     private Boolean waitUntil(
-            By by,
             Function<WebDriver, Boolean> expectedCondition,
             int timeoutInSeconds,
             int pollingDuration) {
@@ -103,7 +98,7 @@ public class WebDriverHelper {
             By by,
             int timeoutInSeconds,
             int pollingDuration) {
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
                 JavascriptExecutor executor = (JavascriptExecutor) webDriver;
                 return executor.executeScript("return document.readyState")
@@ -116,7 +111,7 @@ public class WebDriverHelper {
     }
 
     public Boolean waitUntilPageLoad() {
-        return waitUntil(null, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
                 JavascriptExecutor executor = (JavascriptExecutor) webDriver;
                 return executor.executeScript("return document.readyState")
@@ -131,7 +126,7 @@ public class WebDriverHelper {
 
     public Boolean waitUntilElementAttributeToBeNotEmpty(
             By by, String attribute) {
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
                 return ExpectedConditions
                         .attributeToBeNotEmpty(element(by).seleniumElement(), attribute)
@@ -146,7 +141,7 @@ public class WebDriverHelper {
             By by, String attribute, int timeoutInSeconds,
             int pollingDuration) {
 
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
                 return ExpectedConditions
                         .attributeToBeNotEmpty(element(by).seleniumElement(), attribute)
@@ -161,7 +156,7 @@ public class WebDriverHelper {
             By by, String attribute, int timeoutInSeconds,
             int pollingDuration) {
 
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
                 return ExpectedConditions
                         .attributeToBe(element(by).seleniumElement(), attribute, "")
@@ -175,7 +170,7 @@ public class WebDriverHelper {
     public Boolean waitUntilElementAttributeToBeEmpty(
             By by, String attribute) {
 
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
                 return ExpectedConditions
                         .attributeToBe(element(by).seleniumElement(), attribute, "")
@@ -189,7 +184,7 @@ public class WebDriverHelper {
     public Boolean waitUntilTextToBePresentInElement(By by,
                                                      String textValue) {
 
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
                 return ExpectedConditions
                         .textToBePresentInElement(element(by).seleniumElement(), textValue)
@@ -205,7 +200,7 @@ public class WebDriverHelper {
             By by, String textValue, int timeoutInSeconds,
             int pollingDuration) {
 
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
 
                 return ExpectedConditions
@@ -221,7 +216,7 @@ public class WebDriverHelper {
             By by, int timeoutInSeconds,
             int pollingDuration) {
 
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
 
                 return element(by).seleniumElement().isDisplayed() && element(by).seleniumElement().isEnabled();
@@ -234,7 +229,7 @@ public class WebDriverHelper {
     public Boolean waitUntilElementToBePresent(
             By by) {
 
-        return waitUntil(by, webDriver -> {
+        return waitUntil(webDriver -> {
             try {
 
                 return element(by).seleniumElement().isDisplayed() && element(by).seleniumElement().isEnabled();
