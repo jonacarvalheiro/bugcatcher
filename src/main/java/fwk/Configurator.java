@@ -2,8 +2,6 @@ package fwk;
 
 import org.json.simple.JSONObject;
 
-import java.util.Map;
-
 public class Configurator {
 
     private final JSONObject jsonObject;

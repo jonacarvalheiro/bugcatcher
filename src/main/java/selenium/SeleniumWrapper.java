@@ -10,8 +10,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import selenium.configuration.SeleniumConfigurator;
@@ -26,19 +24,17 @@ import java.util.Arrays;
 
 public class SeleniumWrapper {
 
-    private static SeleniumConfigurator configurator;
+    private SeleniumConfigurator configurator;
     private static ThreadLocal<SeleniumWrapper> instance;
-    private final BugCatcher bugCatcher;
     private WebDriver driver;
     private static final String CHROME_SWITCHES_CAPABILITY = "chrome.switches";
 
 
-    private SeleniumWrapper() throws IOException, ParseException, UnsupportedBrowserException {
-        bugCatcher = BugCatcher.getInstance();
-        configurator = makeConfigurator(bugCatcher.getConfigurator().getSeleniumConfigFilename());
+    private SeleniumWrapper() throws IOException, ParseException {
+        configurator = makeConfigurator(BugCatcher.getInstance().getConfigurator().getSeleniumConfigFilename());
     }
 
-    public static SeleniumWrapper getInstance() throws ParseException, UnsupportedBrowserException, IOException {
+    public static SeleniumWrapper getInstance() throws ParseException, IOException {
         if (instance == null) {
             instance = new ThreadLocal<>();
         }
@@ -75,7 +71,7 @@ public class SeleniumWrapper {
         driver = null;
     }
 
-    private static WebDriver make(String url, String browserName, Capabilities capabilities)
+    private WebDriver make(String url, String browserName, Capabilities capabilities)
             throws MalformedURLException, UnsupportedBrowserException {
         if (configurator.isRemote())
             return new RemoteWebDriver(new URL(url), capabilities);
@@ -98,14 +94,14 @@ public class SeleniumWrapper {
     private static Capabilities getCapabilities(
             String browserName)
             throws UnsupportedBrowserException {
-        if (browserName.equals("chrome")) {
+        if ("chrome".equals(browserName)) {
             ChromeOptions capabilities = new ChromeOptions();
             capabilities.addArguments("--start-maximized");
             capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
             capabilities.setCapability(CHROME_SWITCHES_CAPABILITY,
                     Arrays.asList("--ignore-certificate-errors"));
             return capabilities;
-        } else if (browserName.equals("firefox")) {
+        } else if ("firefox".equals(browserName)) {
             FirefoxOptions capabilities = new FirefoxOptions();
             capabilities.setAcceptInsecureCerts(true);
             return capabilities;
